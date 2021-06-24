@@ -83,13 +83,13 @@ else
 	COMPILER=gcc
 fi
 
-	if [ $COMPILER = "clang" ]
-	then
+#	if [ $COMPILER = "clang" ]
+#	then
 		# install few necessary packages
-		apt-get update -y && apt-get -y install llvm lld
-	else
-		apt-get -y install libfl-dev
-	fi
+#		apt-get update -y && apt-get -y install llvm lld
+#	else
+#		apt-get -y install libfl-dev
+#	fi
 
 # Clean source prior building. 1 is NO(default) | 0 is YES
 INCREMENTAL=1
