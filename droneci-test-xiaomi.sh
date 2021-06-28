@@ -965,6 +965,7 @@ if [[ "$CI_BRANCH" == "testing" ]]; then
 	cloneak3
 	exports
 	build_kernel3
+	gen_zip5
 fi
 
 if [ $LOG_DEBUG = "1" ]
