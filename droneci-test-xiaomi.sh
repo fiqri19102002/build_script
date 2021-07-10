@@ -39,16 +39,19 @@ KERNEL="STRIX"
 
 # Kernel zip name type
 TYPE="nightly"
+TYPE1="personal"
 
 # The name of the device for which the kernel is built
 MODEL="Redmi Note 6 Pro"
 MODEL1="Redmi Note 5 Pro"
 MODEL2="MI 6X/A2"
+MODEL3="Redmi Note 8"
 
 # The codename of the device
 DEVICE="tulip"
 DEVICE1="whyred"
 DEVICE2="wayne"
+DEVICE3="ginkgo"
 
 # Retrieves branch information
 CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -63,6 +66,7 @@ KERNELTYPE1=HMP
 DEFCONFIG=tulip_defconfig
 DEFCONFIG1=whyred_defconfig
 DEFCONFIG2=wayne_defconfig
+DEFCONFIG3=vendor/ginkgo-perf_defconfig
 
 # Show manufacturer info
 MANUFACTURERINFO="XiaoMI, Inc."
@@ -72,6 +76,8 @@ MANUFACTURERINFO="XiaoMI, Inc."
 if [[ "$CI_BRANCH" == "sdm660-hmp-rebase" ]]; then
 	COMPILER=gcc
 elif [[ "$CI_BRANCH" == "lto-gcc-clang" ]]; then
+	COMPILER=clang
+elif [[ "$CI_BRANCH" == "testing" ]]; then
 	COMPILER=clang
 else
 	COMPILER=gcc
@@ -422,36 +428,36 @@ gen_zip1() {
 	cd ..
 }
 
-if [[ "$CI_BRANCH" == "sdm660-hmp-rebase" ]]; then
-	setversioning
-	clone
-	exports
-	build_kernel
-	gen_zip
-else
-	setversioning
-	clone
-	exports
-	build_kernel
-	gen_zip
-	setversioning1
-	setnewcam
-	cloneak
-	build_kernel
-	gen_zip1
-fi
+#if [[ "$CI_BRANCH" == "sdm660-hmp-rebase" ]]; then
+#	setversioning
+#	clone
+#	exports
+#	build_kernel
+#	gen_zip
+#else
+#	setversioning
+#	clone
+#	exports
+#	build_kernel
+#	gen_zip
+#	setversioning1
+#	setnewcam
+#	cloneak
+#	build_kernel
+#	gen_zip1
+#fi
 
-if [ $LOG_DEBUG = "1" ]
-then
-	tg_post_build "error.log" "$CHATID" "Debug Mode Logs"
-fi
+#if [ $LOG_DEBUG = "1" ]
+#then
+#	tg_post_build "error.log" "$CHATID" "Debug Mode Logs"
+#fi
 
 ##------------------------------------------------------------------##
 
-msg "|| compile for whyred device ||"
+#msg "|| compile for whyred device ||"
 
-rm -r "$KERNEL_DIR/out"
-mkdir "$KERNEL_DIR/out"
+#rm -r "$KERNEL_DIR/out"
+#mkdir "$KERNEL_DIR/out"
 
 ##----------------------------------------------------------##
 
@@ -629,36 +635,36 @@ gen_zip3() {
 	cd ..
 }
 
-if [[ "$CI_BRANCH" == "sdm660-hmp-rebase" ]]; then
-	setversioning2
-	cloneak1
-	exports
-	build_kernel1
-	gen_zip2
-else
-	setversioning2
-	cloneak1
-	exports
-	build_kernel1
-	gen_zip2
-	setversioning3
-	setnewcam1
-	cloneak1
-	build_kernel1
-	gen_zip3
-fi
+#if [[ "$CI_BRANCH" == "sdm660-hmp-rebase" ]]; then
+#	setversioning2
+#	cloneak1
+#	exports
+#	build_kernel1
+#	gen_zip2
+#else
+#	setversioning2
+#	cloneak1
+#	exports
+#	build_kernel1
+#	gen_zip2
+#	setversioning3
+#	setnewcam1
+#	cloneak1
+#	build_kernel1
+#	gen_zip3
+#fi
 
-if [ $LOG_DEBUG = "1" ]
-then
-	tg_post_build "error.log" "$CHATID" "Debug Mode Logs"
-fi
+#if [ $LOG_DEBUG = "1" ]
+#then
+#	tg_post_build "error.log" "$CHATID" "Debug Mode Logs"
+#fi
 
 ##----------------------------------------------------------##
 
-msg "|| compile for wayne/jasmine device ||"
+#msg "|| compile for wayne/jasmine device ||"
 
-rm -r "$KERNEL_DIR/out"
-mkdir "$KERNEL_DIR/out"
+#rm -r "$KERNEL_DIR/out"
+#mkdir "$KERNEL_DIR/out"
 
 ##----------------------------------------------------------##
 
@@ -830,22 +836,138 @@ gen_zip5() {
 
 ##--------------------------------------------------------------##
 
-if [[ "$CI_BRANCH" == "sdm660-eas-test" ]]; then
-	setversioning4
-	cloneak2
-	exports
-	build_kernel2
-	gen_zip4
+#if [[ "$CI_BRANCH" == "sdm660-eas-test" ]]; then
+#	setversioning4
+#	cloneak2
+#	exports
+#	build_kernel2
+#	gen_zip4
+#	setversioning5
+#	setoldcam
+#	cloneak2
+#	build_kernel2
+#	gen_zip5
+#fi
+
+#if [ $LOG_DEBUG = "1" ]
+#then
+#	tg_post_build "error.log" "$CHATID" "Debug Mode Logs"
+#fi
+
+##------------------------------------------------------------------##
+
+msg "|| compile for ginkgo device ||"
+
+#rm -r "$KERNEL_DIR/out"
+#mkdir "$KERNEL_DIR/out"
+
+##----------------------------------------------------------##
+
+# Now Its time for other stuffs like cloning
+cloneak3() {
+	rm -rf "$KERNEL_DIR/AnyKernel3"
+	msg "|| Cloning Anykernel for ginkgo ||"
+	git clone --depth 1 https://github.com/STRIX-Project/AnyKernel3.git -b ginkgo-test
+}
+
+##------------------------------------------------------------------##
+
+build_kernel3() {
+	if [ $INCREMENTAL = 0 ]
+	then
+		msg "|| Cleaning Sources ||"
+		make clean && make mrproper && rm -rf out
+	fi
+
+	if [ "$PTTG" = 1 ]
+ 	then
+		tg_post_msg "<b>Docker OS: </b><code>$DISTRO</code>%0A<b>Kernel Version : </b><code>$KERVER</code>%0A<b>Date : </b><code>$(TZ=Asia/Jakarta date)</code>%0A<b>Device : </b><code>$MODEL3 [$DEVICE3]</code>%0A<b>Manufacturer : </b><code>$MANUFACTURERINFO</code>%0A<b>Pipeline Host : </b><code>$KBUILD_BUILD_HOST</code>%0A<b>Host Core Count : </b><code>$PROCS</code>%0A<b>Compiler Used : </b><code>$KBUILD_COMPILER_STRING</code>%0a<b>Branch : </b><code>$CI_BRANCH</code>%0A<b>Last Commit : </b><code>$COMMIT_HEAD</code>%0A<b>Status : </b>#Personal" "$CHATID"
+	fi
+
+	msg "|| Started Compilation ||"
+
+	make O=out $DEFCONFIG3
+	if [ $DEF_REG = 1 ]
+	then
+		cp .config arch/arm64/configs/$DEFCONFIG3
+		git add arch/arm64/configs/$DEFCONFIG3
+		git commit -m "$DEFCONFIG3: Regenerate
+
+						This is an auto-generated commit"
+	fi
+
+	BUILD_START=$(date +"%s")
+	
+	if [ $COMPILER = "clang" ]
+	then
+		make -j"$PROCS" O=out \
+				CROSS_COMPILE=aarch64-linux-gnu- \
+				CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+				CC=clang \
+				AR=llvm-ar \
+				OBJDUMP=llvm-objdump \
+				STRIP=llvm-strip
+	fi
+
+	if [ $COMPILER = "gcc" ]
+	then
+		export CROSS_COMPILE_ARM32=$GCC32_DIR/bin/arm-linux-gnueabi-
+		make -j"$PROCS" O=out CROSS_COMPILE=aarch64-linux-gnu-
+	fi
+
+	BUILD_END=$(date +"%s")
+	DIFF=$((BUILD_END - BUILD_START))
+
+	if [ -f "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb ] 
+	then
+		msg "|| Kernel successfully compiled ||"
+	elif ! [ -f $KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb ]
+	then
+		echo -e "Kernel compilation failed, See buildlog to fix errors"
+		tg_post_msg "<b>Build failed to compile after $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds</b>" "$CHATID"
+		exit 1
+	fi
+}
+
+##--------------------------------------------------------------##
+
+# Set naming to new cam for zip file
+setversioning5() {
+	KERNELNAME5="$KERNEL-$DEVICE3-$TYPE1-$DATE"
+	export KERNELTYPE KERNELNAME5
+	export ZIPNAME5="$KERNELNAME5.zip"
+}
+
+##--------------------------------------------------------------##
+
+gen_zip5() {
+	msg "|| Zipping into a flashable zip ||"
+	mv "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb AnyKernel3/Image.gz-dtb
+	mv "$KERNEL_DIR"/out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
+	cd AnyKernel3 || exit
+	zip -r9 "$ZIPNAME5" * -x .git README.md
+
+	# Prepare a final zip variable
+	ZIP_FINAL="$ZIPNAME5"
+
+	if [ "$PTTG" = 1 ]
+ 	then
+		tg_post_build "$ZIP_FINAL" "$CHATID" "Build took : $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)"
+	fi
+	cd ..
+}
+
+##--------------------------------------------------------------##
+
+if [[ "$CI_BRANCH" == "testing" ]]; then
+	clone
 	setversioning5
-	setoldcam
-	cloneak2
-	build_kernel2
-	gen_zip5
+	cloneak3
+	exports
+	build_kernel3
 fi
 
 if [ $LOG_DEBUG = "1" ]
 then
 	tg_post_build "error.log" "$CHATID" "Debug Mode Logs"
 fi
-
-##------------------------------------------------------------------##
