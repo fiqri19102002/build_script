@@ -77,7 +77,7 @@ if [[ "$CI_BRANCH" == "sdm660-hmp-rebase" ]]; then
 	COMPILER=gcc
 elif [[ "$CI_BRANCH" == "lto-gcc-clang" ]]; then
 	COMPILER=clang
-elif [[ "$CI_BRANCH" == "testing" ]]; then
+elif [[ "$CI_BRANCH" == "11.0-personal" ]]; then
 	COMPILER=clang
 else
 	COMPILER=gcc
@@ -959,7 +959,7 @@ gen_zip5() {
 
 ##--------------------------------------------------------------##
 
-if [[ "$CI_BRANCH" == "testing" ]]; then
+if [[ "$CI_BRANCH" == "11.0-personal" ]]; then
 	clone
 	setversioning5
 	cloneak3
